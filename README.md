@@ -36,7 +36,7 @@ use {
 If you want to change `memo_dir` where your memo are placed,
 you can call `require('memo').setup()` and change `memo_dir` in its options.
 
-**optional**
+**optional**  
 Keymaps like this would help you to use this plugin.
 
 ```lua
