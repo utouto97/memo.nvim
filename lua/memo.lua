@@ -1,4 +1,5 @@
-local Job = require('plenary.job')
+local Path = require('plenary.path')
+local scan = require('plenary.scandir')
 local pickers = require("telescope.pickers")
 local finders = require("telescope.finders")
 local conf = require("telescope.config").values
@@ -30,41 +31,27 @@ M.new = function()
 end
 
 M.list = function()
-  local memolist = {}
-  local titlelist = {}
+  local memo_dir = vim.fn.fnamemodify(get_opt('memo_dir'), ':p')
+  local memolist = scan.scan_dir(memo_dir, { depth = 1 })
 
-  Job:new({
-    command = 'ls',
-    args = { '-1' },
-    cwd = get_opt('memo_dir'),
-    on_exit = function(j, _)
-      memolist = j:result()
-    end,
-  }):sync()
-
-  for _, path in ipairs(memolist) do
-    Job:new({
-      command = 'head',
-      args = { '-1', path },
-    cwd = get_opt('memo_dir'),
-      on_exit = function(j, _)
-        local head1 = j:result()[1] or '(no content)'
-        table.insert(titlelist, { path, path .. ' : ' .. head1 })
-      end,
-    }):sync()
+  local entries = {}
+  for _, path in pairs(memolist) do
+    local head1 = Path.new(path):head(1)
+    local filename = vim.fn.fnamemodify(path, ':t')
+    table.insert(entries, { path, filename .. ' : ' .. head1})
   end
 
   local opts = {}
   pickers.new(opts, {
     prompt_title = 'Find Memo (memo.nvim)',
     finder = finders.new_table {
-      results = titlelist,
+      results = entries,
       entry_maker = function(entry)
         return {
           value = entry,
           display = entry[2],
           ordinal = entry[2],
-          path = memopath(entry[1]),
+          path = entry[1]
         }
       end
     },
