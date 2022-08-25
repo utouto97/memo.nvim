@@ -1,4 +1,5 @@
 local Job = require('plenary.job')
+local Path = require('plenary.path')
 local pickers = require("telescope.pickers")
 local finders = require("telescope.finders")
 local conf = require("telescope.config").values
@@ -31,7 +32,7 @@ end
 
 M.list = function()
   local memolist = {}
-  local titlelist = {}
+  local entries = {}
 
   Job:new({
     command = 'ls',
@@ -43,22 +44,15 @@ M.list = function()
   }):sync()
 
   for _, path in ipairs(memolist) do
-    Job:new({
-      command = 'head',
-      args = { '-1', path },
-    cwd = get_opt('memo_dir'),
-      on_exit = function(j, _)
-        local head1 = j:result()[1] or '(no content)'
-        table.insert(titlelist, { path, path .. ' : ' .. head1 })
-      end,
-    }):sync()
+    local head1 = Path.new(memopath(path)):head(1)
+    table.insert(entries, { path, path .. ' : ' .. head1 })
   end
 
   local opts = {}
   pickers.new(opts, {
     prompt_title = 'Find Memo (memo.nvim)',
     finder = finders.new_table {
-      results = titlelist,
+      results = entries,
       entry_maker = function(entry)
         return {
           value = entry,
