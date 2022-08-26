@@ -3,6 +3,8 @@ local scan = require('plenary.scandir')
 local pickers = require("telescope.pickers")
 local finders = require("telescope.finders")
 local conf = require("telescope.config").values
+local actions = require("telescope.actions")
+local action_state = require("telescope.actions.state")
 
 local M = {}
 
@@ -17,6 +19,19 @@ end
 local memopath = function(filename)
   local memo_dir = vim.fn.fnamemodify(get_opt('memo_dir'), ':p:h')
   return memo_dir .. '/' .. filename
+end
+
+local removeFileAfterConfirmation = function(path)
+  if vim.fn.confirm("Delete?: " .. path, "&Yes\n&No", 1) ~= 1 then
+    return false
+  end
+
+  if vim.fn.confirm("Really?: " .. path, "&Yes\n&No", 1) ~= 1 then
+    return false
+  end
+
+  Path.new(path):rm()
+  return true
 end
 
 M.setup = function(opts)
@@ -38,7 +53,7 @@ M.list = function()
   for _, path in pairs(memolist) do
     local head1 = Path.new(path):head(1)
     local filename = vim.fn.fnamemodify(path, ':t')
-    table.insert(entries, { path, filename .. ' : ' .. head1})
+    table.insert(entries, { path, filename .. ' : ' .. head1 })
   end
 
   local opts = {}
@@ -57,6 +72,17 @@ M.list = function()
     },
     sorter = conf.file_sorter(opts),
     previewer = conf.file_previewer(opts),
+    attach_mappings = function(bufnr, map)
+      map('i', '<C-d>', function(_)
+        local entry = action_state.get_selected_entry()
+        local path = entry.value[1]
+        if removeFileAfterConfirmation(path) then
+          print('Deleted ' .. path)
+        end
+        actions.close(bufnr)
+      end)
+      return true
+    end
   }):find()
 end
 
