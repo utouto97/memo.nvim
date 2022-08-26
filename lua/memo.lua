@@ -31,7 +31,7 @@ M.new = function()
 end
 
 M.list = function()
-  local memo_dir = vim.fn.fnamemodify(get_opt('memo_dir'), ':p')
+  local memo_dir = vim.fn.fnamemodify(get_opt('memo_dir'), ':p:h')
   local memolist = scan.scan_dir(memo_dir, { depth = 1 })
 
   local entries = {}
