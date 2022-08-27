@@ -34,6 +34,16 @@ local removeFileAfterConfirmation = function(path)
   return true
 end
 
+local renameFile = function(oldName)
+  vim.ui.input({ prompt='New name?\n' }, function(newName)
+    if vim.fn.fnamemodify(newName, ':e') ~= 'md' then
+      newName = newName .. '.md'
+    end
+    newName = memopath(newName)
+    Path.new(oldName):rename({ new_name = newName })
+  end)
+end
+
 M.setup = function(opts)
   user_opts = opts or {}
   vim.api.nvim_create_user_command('Memo', M.new, {})
@@ -79,6 +89,12 @@ M.list = function()
         if removeFileAfterConfirmation(path) then
           print('Deleted ' .. path)
         end
+        actions.close(bufnr)
+      end)
+      map('i', '<C-r>', function(_)
+        local entry = action_state.get_selected_entry()
+        local path = entry.value[1]
+        renameFile(path)
         actions.close(bufnr)
       end)
       return true
