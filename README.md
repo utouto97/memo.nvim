@@ -2,14 +2,13 @@
 
 `memo.nvim` is a very simple memo plugin for neovim.
 
-You can do just two things for now.
-
 This plugin provides two lua functions (and vim commands).
 
 * `require('memo').new` (lua) or `:Memo` (vim)
   * Open a markdown file whose name is like timestmap.
 * `require('memo').list` (lua) or `:MemoList` (vim)
   * Find memo using fuzzy finder and open it.
+  * `<C-d>` to delete memo under the cursor
 
 ## Requirements
 
