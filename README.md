@@ -10,6 +10,7 @@ This plugin provides two lua functions (and vim commands).
   * Find memo using fuzzy finder and open it.
   * `<C-d>` to delete memo under the cursor
   * `<C-r>` to rename memo under the cursor
+  * `<C-c>` to duplicate memo under the cursor
 
 ## Requirements
 
