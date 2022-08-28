@@ -44,6 +44,12 @@ local rename_file = function(old_name)
   end)
 end
 
+local duplicate_file = function(path)
+  local ext = vim.fn.fnamemodify(path, ':e')
+  local dest = vim.fn.fnamemodify(path, ':r') .. '_copy.' .. ext
+  Path.new(path):copy({ override = false, destination = dest })
+end
+
 M.setup = function(opts)
   user_opts = opts or {}
   vim.api.nvim_create_user_command('Memo', M.new, {})
@@ -96,6 +102,12 @@ M.list = function()
           local entry = action_state.get_selected_entry()
           local path = entry.value[1]
           rename_file(path)
+          actions.close(bufnr)
+        end)
+        map('i', '<C-c>', function(_)
+          local entry = action_state.get_selected_entry()
+          local path = entry.value[1]
+          duplicate_file(path)
           actions.close(bufnr)
         end)
         return true
