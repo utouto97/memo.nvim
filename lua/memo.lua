@@ -104,7 +104,7 @@ M.list = function()
           rename_file(path)
           actions.close(bufnr)
         end)
-        map('i', '<C-c>', function(_)
+        map('i', '<C-y>', function(_)
           local entry = action_state.get_selected_entry()
           local path = entry.value[1]
           duplicate_file(path)
