@@ -21,12 +21,6 @@ local memopath = function(filename)
   return memo_dir .. '/' .. filename
 end
 
-local duplicate_file = function(path)
-  local ext = vim.fn.fnamemodify(path, ':e')
-  local dest = vim.fn.fnamemodify(path, ':r') .. '_copy.' .. ext
-  Path.new(path):copy({ override = false, destination = dest })
-end
-
 M.setup = function(opts)
   user_opts = opts or {}
   vim.api.nvim_create_user_command('Memo', M.new, {})
@@ -36,6 +30,12 @@ end
 M.new = function()
   local now = os.date('%Y%m%d_%H%M%S')
   vim.api.nvim_command('edit ' .. memopath(now .. '.md'))
+end
+
+M.copy = function(path)
+  local ext = vim.fn.fnamemodify(path, ':e')
+  local dest = vim.fn.fnamemodify(path, ':r') .. '_copy.' .. ext
+  Path.new(path):copy({ override = false, destination = dest })
 end
 
 M.rename = function(path)
@@ -113,7 +113,7 @@ M.list = function()
         map('i', '<C-y>', function(_)
           local entry = action_state.get_selected_entry()
           local path = entry.value[1]
-          duplicate_file(path)
+          M.copy(path)
           actions.close(bufnr)
         end)
         return true
