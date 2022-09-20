@@ -21,19 +21,6 @@ local memopath = function(filename)
   return memo_dir .. '/' .. filename
 end
 
-local remove_file_with_confirm = function(path)
-  if vim.fn.confirm('Delete?: ' .. path, '&Yes\n&No', 1) ~= 1 then
-    return false
-  end
-
-  if vim.fn.confirm('Really?: ' .. path, '&Yes\n&No', 1) ~= 1 then
-    return false
-  end
-
-  Path.new(path):rm()
-  return true
-end
-
 local rename_file = function(old_name)
   vim.ui.input({ prompt = 'New name?\n' }, function(new_name)
     if vim.fn.fnamemodify(new_name, ':e') ~= 'md' then
@@ -112,7 +99,7 @@ M.list = function()
         map('i', '<C-d>', function(_)
           local entry = action_state.get_selected_entry()
           local path = entry.value[1]
-          if remove_file_with_confirm(path) then
+          if M.remove(path) then
             print('Deleted ' .. path)
           end
           actions.close(bufnr)
