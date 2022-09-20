@@ -61,6 +61,19 @@ M.new = function()
   vim.api.nvim_command('edit ' .. memopath(now .. '.md'))
 end
 
+M.remove = function(path)
+  if vim.fn.confirm('Delete?: ' .. path, '&Yes\n&No', 1) ~= 1 then
+    return false
+  end
+
+  if vim.fn.confirm('Really?: ' .. path, '&Yes\n&No', 1) ~= 1 then
+    return false
+  end
+
+  Path.new(path):rm()
+  return true
+end
+
 M.list_with_title = function()
   local memo_dir = vim.fn.fnamemodify(get_opt('memo_dir'), ':p:h')
   local memolist = scan.scan_dir(memo_dir, { depth = 1 })
