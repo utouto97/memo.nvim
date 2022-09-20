@@ -48,6 +48,16 @@ M.new = function()
   vim.api.nvim_command('edit ' .. memopath(now .. '.md'))
 end
 
+M.rename = function(path)
+  vim.ui.input({ prompt = 'New name?\n' }, function(new_name)
+    if vim.fn.fnamemodify(new_name, ':e') ~= 'md' then
+      new_name = new_name .. '.md'
+    end
+    new_name = memopath(new_name)
+    Path.new(path):rename({ new_name = new_name })
+  end)
+end
+
 M.remove = function(path)
   if vim.fn.confirm('Delete?: ' .. path, '&Yes\n&No', 1) ~= 1 then
     return false
