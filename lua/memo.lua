@@ -61,7 +61,7 @@ M.new = function()
   vim.api.nvim_command('edit ' .. memopath(now .. '.md'))
 end
 
-M.list = function()
+M.list_with_title = function()
   local memo_dir = vim.fn.fnamemodify(get_opt('memo_dir'), ':p:h')
   local memolist = scan.scan_dir(memo_dir, { depth = 1 })
 
@@ -71,6 +71,12 @@ M.list = function()
     local filename = vim.fn.fnamemodify(path, ':t')
     table.insert(entries, { path, filename .. ' : ' .. head1 })
   end
+
+  return entries
+end
+
+M.list = function()
+  local entries = M.list_with_title()
 
   local opts = {}
   pickers
