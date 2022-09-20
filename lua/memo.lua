@@ -21,16 +21,6 @@ local memopath = function(filename)
   return memo_dir .. '/' .. filename
 end
 
-local rename_file = function(old_name)
-  vim.ui.input({ prompt = 'New name?\n' }, function(new_name)
-    if vim.fn.fnamemodify(new_name, ':e') ~= 'md' then
-      new_name = new_name .. '.md'
-    end
-    new_name = memopath(new_name)
-    Path.new(old_name):rename({ new_name = new_name })
-  end)
-end
-
 local duplicate_file = function(path)
   local ext = vim.fn.fnamemodify(path, ':e')
   local dest = vim.fn.fnamemodify(path, ':r') .. '_copy.' .. ext
@@ -117,7 +107,7 @@ M.list = function()
         map('i', '<C-r>', function(_)
           local entry = action_state.get_selected_entry()
           local path = entry.value[1]
-          rename_file(path)
+          M.rename(path)
           actions.close(bufnr)
         end)
         map('i', '<C-y>', function(_)
