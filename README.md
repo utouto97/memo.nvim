@@ -2,15 +2,15 @@
 
 `memo.nvim` is a very simple memo plugin for neovim.
 
-This plugin provides two lua functions (and vim commands).
-
+This plugin provides
 * `require('memo').new` (lua) or `:Memo` (vim)
   * Open a markdown file whose name is like timestmap.
-* `require('memo').list` (lua) or `:MemoList` (vim)
-  * Find memo using fuzzy finder and open it.
+* `Telescope memo`
+  * Find memo using fuzzy finder (Telescope) and open it.
   * `<C-d>` to delete memo under the cursor
   * `<C-r>` to rename memo under the cursor
   * `<C-c>` to duplicate memo under the cursor
+* other lua functions like `copy`, `remove` and `rename`
 
 ## Requirements
 
@@ -42,5 +42,5 @@ Keymaps like this would help you to use this plugin.
 
 ```lua
 vim.keymap.set('n', '<Leader>mn', '<cmd>Memo<cr>')
-vim.keymap.set('n', '<Leader>mm', '<cmd>MemoList<cr>')
+vim.keymap.set('n', '<Leader>mm', '<cmd>Telescope memo<cr>')
 ```
