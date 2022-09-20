@@ -39,12 +39,12 @@ M.copy = function(path)
 end
 
 M.rename = function(path)
-  vim.ui.input({ prompt = 'New name?\n' }, function(new_name)
-    if vim.fn.fnamemodify(new_name, ':e') ~= 'md' then
-      new_name = new_name .. '.md'
+  vim.ui.input({ prompt = 'New name?\n' }, function(dest)
+    if vim.fn.fnamemodify(dest, ':e') ~= 'md' then
+      dest = dest .. '.md'
     end
-    new_name = memopath(new_name)
-    Path.new(path):rename({ new_name = new_name })
+    dest = memopath(dest)
+    Path.new(path):rename({ new_name = dest })
   end)
 end
 
