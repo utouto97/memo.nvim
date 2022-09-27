@@ -3,16 +3,16 @@ local scan = require('plenary.scandir')
 
 local M = {}
 
-local memopath = function(filename)
-  local memo_dir = vim.fn.fnamemodify(settings.memo_dir, ':p:h')
-  return memo_dir .. '/' .. filename
-end
-
 local DEFAULT_SETTINGS = {
   memo_dir = '~/.memo',
 }
 
 local settings = DEFAULT_SETTINGS
+
+local memopath = function(filename)
+  local memo_dir = vim.fn.fnamemodify(settings.memo_dir, ':p:h')
+  return memo_dir .. '/' .. filename
+end
 
 M.setup = function(opts)
   if opts then
