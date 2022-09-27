@@ -3,21 +3,22 @@ local scan = require('plenary.scandir')
 
 local M = {}
 
-local default_opts = {
+local DEFAULT_SETTINGS = {
   memo_dir = '~/.memo',
 }
-local user_opts = {}
-local get_opt = function(key)
-  return user_opts[key] or default_opts[key]
-end
+
+local settings = DEFAULT_SETTINGS
 
 local memopath = function(filename)
-  local memo_dir = vim.fn.fnamemodify(get_opt('memo_dir'), ':p:h')
+  local memo_dir = vim.fn.fnamemodify(settings.memo_dir, ':p:h')
   return memo_dir .. '/' .. filename
 end
 
 M.setup = function(opts)
-  user_opts = opts or {}
+  if opts then
+    settings = vim.tbl_deep_extend('force', settings, opts)
+  end
+
   vim.api.nvim_create_user_command('Memo', M.new, {})
 end
 
@@ -56,7 +57,7 @@ M.remove = function(path)
 end
 
 M.list_with_title = function()
-  local memo_dir = vim.fn.fnamemodify(get_opt('memo_dir'), ':p:h')
+  local memo_dir = vim.fn.fnamemodify(settings.memo_dir, ':p:h')
   local memolist = scan.scan_dir(memo_dir, { depth = 1 })
 
   local entries = {}
