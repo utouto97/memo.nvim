@@ -45,6 +45,10 @@ local telescope_memo = function()
           memo.copy(path)
           actions.close(bufnr)
         end)
+        map('i', '<C-a>', function(_)
+          actions.close(bufnr)
+          memo.new()
+        end)
         return true
       end,
     })

@@ -7,6 +7,7 @@ This plugin provides
   * Open a markdown file whose name is like timestmap.
 * `Telescope memo`
   * Find memo using fuzzy finder (Telescope) and open it.
+  * `<C-a>` to create new memo
   * `<C-d>` to delete memo under the cursor
   * `<C-r>` to rename memo under the cursor
   * `<C-c>` to duplicate memo under the cursor
